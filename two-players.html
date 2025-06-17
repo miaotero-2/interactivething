@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Players - Enter Names</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #fceabb 0%, #f8b500 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .players-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 60px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 24px;
+        }
+        .player-label {
+            font-size: 1.1em;
+            margin: 16px 0 6px 0;
+            color: #f8b500;
+        }
+        .player-input {
+            font-size: 1.1em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #f8b500;
+            margin-bottom: 16px;
+            width: 200px;
+        }
+        .start-btn {
+            font-size: 1.1em;
+            padding: 10px 28px;
+            border: none;
+            border-radius: 8px;
+            background: #f8b500;
+            color: #fff;
+            cursor: pointer;
+            margin-top: 18px;
+            transition: background 0.2s;
+        }
+        .start-btn:hover {
+            background: #ffce54;
+            color: #333;
+        }
+        .back-link {
+            display: block;
+            margin-top: 24px;
+            color: #f8b500;
+            text-decoration: none;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="players-container">
+        <h1>Two Players</h1>
+        <form id="player-names-form">
+            <label class="player-label" for="player1">Player 1 Name:</label><br>
+            <input class="player-input" type="text" id="player1" name="player1" placeholder="Player 1" required><br>
+            <label class="player-label" for="player2">Player 2 Name:</label><br>
+            <input class="player-input" type="text" id="player2" name="player2" placeholder="Player 2" required><br>
+            <button class="start-btn" type="submit">Start Game</button>
+        </form>
+        <a href="players.html" class="back-link">Back to Player Select</a>
+    </div>
+    <script>
+        document.getElementById('player-names-form').onsubmit = function(e) {
+            e.preventDefault();
+            const p1 = document.getElementById('player1').value.trim();
+            const p2 = document.getElementById('player2').value.trim();
+            if (p1 && p2) {
+                window.location.href = `two-player-game.html?player1=${encodeURIComponent(p1)}&player2=${encodeURIComponent(p2)}`;
+            }
+        };
+    </script>
+</body>
+</html>

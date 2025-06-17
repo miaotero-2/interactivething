@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Matching Game</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #f8ffae 0%, #43c6ac 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .main-layout {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100vw;
+            min-height: 100vh;
+        }
+        .start-container {
+            position: relative;
+            flex: 0 1 500px;
+            margin: 40px 0 40px 0;
+        }
+        .best-time-box {
+            flex: 0 1 220px;
+            margin: 40px 0 40px 32px;
+            background: #e0ffe0;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(67,198,172,0.10);
+            padding: 32px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: fit-content;
+        }
+        #best-time {
+            margin: 0;
+            font-size: 1.2em;
+            color: #43c6ac;
+            font-weight: bold;
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 16px;
+        }
+        p {
+            color: #555;
+            font-size: 1.1em;
+        }
+        .links-container {
+            margin-top: 16px;
+        }
+        .home-link, .tutorial-link, .players-link {
+            font-size: 0.95em;
+            padding: 6px 16px;
+            margin: 4px 6px;
+            display: inline-block;
+            background: #f0f0f0;
+            border-radius: 6px;
+            color: #43c6ac;
+            text-decoration: none;
+            border: 1px solid #43c6ac;
+            transition: background 0.2s, color 0.2s;
+        }
+        .home-link:hover, .tutorial-link:hover, .players-link:hover {
+            background: #43c6ac;
+            color: #fff;
+        }
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 90px);
+            grid-gap: 16px;
+            justify-content: center;
+            margin: 24px 0 12px 0;
+        }
+        .card {
+            width: 90px;
+            height: 90px;
+            font-size: 2.8em;
+            background: #fff;
+            border: 2px solid #43c6ac;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .card:disabled {
+            background: #e0ffe0;
+            color: #43c6ac;
+            cursor: default;
+        }
+        #moves, #message, #timer, #best-time {
+            margin: 8px 0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-layout">
+        <div class="start-container">
+            <h1>Single Player Matching Game</h1>
+            <div id="game-board"></div>
+            <p id="moves">Moves: 0</p>
+            <p id="timer">Time: 0s</p>
+            <p id="message"></p>
+            <button id="play-again" style="display:none;margin:12px 0;">Play Again</button>
+            <div class="links-container">
+                <a href="index.html" class="home-link">Back to Home</a>
+                <a href="tutorial.html" class="tutorial-link">Back to Tutorial</a>
+                <a href="players.html" class="players-link">How Many Players?</a>
+            </div>
+        </div>
+        <div class="best-time-box">
+            <p id="best-time">Best Time: --</p>
+        </div>
+    </div>
+    <script>
+        const cardsArray = [
+            '🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '🍓', '🍓',
+            '🍒', '🍒', '🍍', '🍍', '🥝', '🥝', '🍉', '🍉'
+        ];
+        let cards = [];
+        let firstCard = null;
+        let secondCard = null;
+        let lockBoard = false;
+        let moves = 0;
+        let matchedPairs = 0;
+        let timerInterval = null;
+        let timeElapsed = 0;
+        let timerStarted = false;
+        let bestTime = localStorage.getItem('matchingGameBestTime') ? parseInt(localStorage.getItem('matchingGameBestTime')) : null;
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        function startTimer() {
+            timeElapsed = 0;
+            document.getElementById('timer').textContent = 'Time: 0s';
+            timerInterval = setInterval(() => {
+                timeElapsed++;
+                document.getElementById('timer').textContent = 'Time: ' + timeElapsed + 's';
+            }, 1000);
+        }
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+        function updateBestTimeDisplay() {
+            document.getElementById('best-time').textContent = bestTime !== null ? 'Best Time: ' + bestTime + 's' : 'Best Time: --';
+        }
+        function createBoard() {
+            cards = shuffle([...cardsArray]);
+            const board = document.getElementById('game-board');
+            board.innerHTML = '';
+            matchedPairs = 0;
+            moves = 0;
+            document.getElementById('moves').textContent = 'Moves: 0';
+            document.getElementById('timer').textContent = 'Time: 0s';
+            document.getElementById('message').textContent = '';
+            document.getElementById('play-again').style.display = 'none';
+            firstCard = null;
+            secondCard = null;
+            lockBoard = false;
+            stopTimer();
+            timerStarted = false;
+            updateBestTimeDisplay();
+            for (let i = 0; i < cards.length; i++) {
+                const card = document.createElement('button');
+                card.className = 'card';
+                card.dataset.index = i;
+                card.textContent = '';
+                card.onclick = handleCardClick;
+                board.appendChild(card);
+            }
+        }
+        function handleCardClick(e) {
+            if (lockBoard) return;
+            if (!timerStarted) {
+                startTimer();
+                timerStarted = true;
+            }
+            const card = e.target;
+            const index = card.dataset.index;
+            if (card.textContent !== '' || card === firstCard) return;
+            card.textContent = cards[index];
+            if (!firstCard) {
+                firstCard = card;
+            } else {
+                secondCard = card;
+                moves++;
+                document.getElementById('moves').textContent = 'Moves: ' + moves;
+                if (firstCard.textContent === secondCard.textContent) {
+                    matchedPairs++;
+                    firstCard.disabled = true;
+                    secondCard.disabled = true;
+                    firstCard = null;
+                    secondCard = null;
+                    if (matchedPairs === cards.length / 2) {
+                        document.getElementById('message').textContent = 'Congratulations! You matched all the cards in ' + moves + ' moves and ' + timeElapsed + ' seconds!';
+                        document.getElementById('play-again').style.display = 'inline-block';
+                        stopTimer();
+                        if (bestTime === null || timeElapsed < bestTime) {
+                            bestTime = timeElapsed;
+                            localStorage.setItem('matchingGameBestTime', bestTime);
+                            updateBestTimeDisplay();
+                        }
+                    }
+                } else {
+                    lockBoard = true;
+                    setTimeout(() => {
+                        firstCard.textContent = '';
+                        secondCard.textContent = '';
+                        firstCard = null;
+                        secondCard = null;
+                        lockBoard = false;
+                    }, 1000);
+                }
+            }
+        }
+        document.getElementById('play-again').onclick = createBoard;
+        createBoard();
+    </script>
+</body>
+</html>

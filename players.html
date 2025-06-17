@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Many Players?</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #fceabb 0%, #f8b500 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .players-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 60px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 24px;
+        }
+        .player-btns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .player-btn {
+            width: 180px;
+            margin: 10px 0;
+            font-size: 1.2em;
+            padding: 12px 32px;
+            border: none;
+            border-radius: 8px;
+            background: #f8b500;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .player-btn:hover {
+            background: #ffce54;
+            color: #333;
+        }
+        .back-link {
+            display: block;
+            margin-top: 24px;
+            color: #f8b500;
+            text-decoration: none;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="players-container">
+        <h1>How Many Players?</h1>
+        <div class="player-btns">
+            <a href="game.html"><button class="player-btn">1 Player</button></a>
+            <a href="two-players.html" id="two-player-link"><button class="player-btn">2 Players</button></a>
+            <a href="#" id="three-player-link"><button class="player-btn">3 Players</button></a>
+        </div>
+        <a href="index.html" class="back-link">Back to Home</a>
+    </div>
+</body>
+</html>
