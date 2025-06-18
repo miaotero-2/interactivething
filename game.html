@@ -41,7 +41,7 @@
             height: fit-content;
         }
         #best-time {
-            margin: 0;
+            margin: 0 0 8px 0;
             font-size: 1.2em;
             color: #43c6ac;
             font-weight: bold;
@@ -49,6 +49,10 @@
             padding: 0;
             border-radius: 0;
             box-shadow: none;
+            white-space: pre-line;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
         h1 {
             color: #333;
@@ -103,6 +107,37 @@
             margin: 8px 0;
             font-size: 1.1em;
         }
+        #play-again {
+            font-size: 1em;
+            padding: 12px 28px;
+            border-radius: 8px;
+            background: #fff;
+            color: #43c6ac;
+            border: 2px solid #43c6ac;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        #play-again:hover {
+            background: #43c6ac;
+            color: #fff;
+        }
+        .new-deck-btn {
+            font-size: 1em;
+            padding: 10px 24px;
+            border-radius: 8px;
+            background: #fff;
+            color: #f8b500;
+            border: 2px solid #f8b500;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0 0 0;
+            transition: background 0.2s, color 0.2s;
+        }
+        .new-deck-btn:hover {
+            background: #f8b500;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -114,6 +149,7 @@
             <p id="timer">Time: 0s</p>
             <p id="message"></p>
             <button id="play-again" style="display:none;margin:12px 0;">Play Again</button>
+            <button onclick="window.location.href='choose-deck.html'" class="new-deck-btn">New Deck</button>
             <div class="links-container">
                 <a href="index.html" class="home-link">Back to Home</a>
                 <a href="tutorial.html" class="tutorial-link">Back to Tutorial</a>

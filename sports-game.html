@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Two Player Matching Game</title>
+    <title>Single Player Matching Game - Sports Balls</title>
     <style>
         body {
             background: linear-gradient(120deg, #f8ffae 0%, #43c6ac 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
-            min-height: 100vh;
         }
         .main-layout {
             display: flex;
@@ -23,11 +27,6 @@
             position: relative;
             flex: 0 1 500px;
             margin: 40px 0 40px 0;
-            background: rgba(255,255,255,0.95);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
-            padding: 32px 24px;
-            text-align: center;
         }
         .best-time-box {
             flex: 0 1 220px;
@@ -53,21 +52,35 @@
             border-radius: 0;
             box-shadow: none;
             white-space: pre-line;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
-        .players-link, .home-link, .tutorial-link {
+        h1 {
+            color: #333;
+            margin-bottom: 16px;
+        }
+        p {
+            color: #555;
+            font-size: 1.1em;
+        }
+        .links-container {
+            margin-top: 16px;
+        }
+        .home-link, .tutorial-link, .players-link {
             font-size: 0.95em;
             padding: 6px 16px;
             margin: 4px 6px;
             display: inline-block;
             background: #f0f0f0;
             border-radius: 6px;
-            color: #f8b500;
+            color: #43c6ac;
             text-decoration: none;
-            border: 1px solid #f8b500;
+            border: 1px solid #43c6ac;
             transition: background 0.2s, color 0.2s;
         }
-        .players-link:hover, .home-link:hover, .tutorial-link:hover {
-            background: #f8b500;
+        .home-link:hover, .tutorial-link:hover, .players-link:hover {
+            background: #43c6ac;
             color: #fff;
         }
         #game-board {
@@ -92,14 +105,9 @@
             color: #43c6ac;
             cursor: default;
         }
-        #moves, #timer, #message {
+        #moves, #message, #timer, #best-time {
             margin: 8px 0;
             font-size: 1.1em;
-        }
-        .turn-label {
-            font-size: 1.2em;
-            color: #43c6ac;
-            margin-bottom: 8px;
         }
         #play-again {
             font-size: 1em;
@@ -121,8 +129,7 @@
 <body>
     <div class="main-layout">
         <div class="start-container">
-            <h1>Two Player Matching Game</h1>
-            <div class="turn-label" id="turn-label">Player 1's Turn</div>
+            <h1>Single Player Matching Game - Sports Balls</h1>
             <div id="game-board"></div>
             <p id="moves">Moves: 0</p>
             <p id="timer">Time: 0s</p>
@@ -140,8 +147,8 @@
     </div>
     <script>
         const cardsArray = [
-            '🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '🍓', '🍓',
-            '🍒', '🍒', '🍍', '🍍', '🥝', '🥝', '🍉', '🍉'
+            '⚽', '⚽', '🏀', '🏀', '🏈', '🏈', '⚾', '⚾',
+            '🎾', '🎾', '🏐', '🏐', '🏉', '🏉', '🥎', '🥎'
         ];
         let cards = [];
         let firstCard = null;
@@ -152,19 +159,7 @@
         let timerInterval = null;
         let timeElapsed = 0;
         let timerStarted = false;
-        // Load best times from localStorage
-        let bestTimes = [
-            localStorage.getItem('matchingGameBestTimeP1') ? parseInt(localStorage.getItem('matchingGameBestTimeP1')) : null,
-            localStorage.getItem('matchingGameBestTimeP2') ? parseInt(localStorage.getItem('matchingGameBestTimeP2')) : null
-        ];
-        // Two player logic
-        const urlParams = new URLSearchParams(window.location.search);
-        const player1 = urlParams.get('player1') || 'Player 1';
-        const player2 = urlParams.get('player2') || 'Player 2';
-        let currentPlayer = 1;
-        let scores = [0, 0];
-        let phase = 1; // 1 = player 1's game, 2 = player 2's game
-        document.getElementById('turn-label').textContent = player1 + "'s Turn";
+        let bestTime = localStorage.getItem('matchingGameBestTimeSports') ? parseInt(localStorage.getItem('matchingGameBestTimeSports')) : null;
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -184,9 +179,7 @@
             clearInterval(timerInterval);
         }
         function updateBestTimeDisplay() {
-            let label = '';
-            label = player1 + ' Best Time: ' + (bestTimes[0] !== null ? bestTimes[0] + 's' : '--') + '\n' + player2 + ' Best Time: ' + (bestTimes[1] !== null ? bestTimes[1] + 's' : '--');
-            document.getElementById('best-time').textContent = label;
+            document.getElementById('best-time').textContent = bestTime !== null ? 'Best Time: ' + bestTime + 's' : 'Best Time: --';
         }
         function createBoard() {
             cards = shuffle([...cardsArray]);
@@ -203,15 +196,6 @@
             lockBoard = false;
             stopTimer();
             timerStarted = false;
-            if (phase === 1) {
-                scores = [0, 0];
-                currentPlayer = 1;
-                document.getElementById('turn-label').textContent = player1 + "'s Turn";
-            } else {
-                currentPlayer = 2;
-                document.getElementById('turn-label').textContent = player2 + "'s Turn";
-            }
-            bestTime = null;
             updateBestTimeDisplay();
             for (let i = 0; i < cards.length; i++) {
                 const card = document.createElement('button');
@@ -242,38 +226,16 @@
                     matchedPairs++;
                     firstCard.disabled = true;
                     secondCard.disabled = true;
-                    scores[currentPlayer - 1]++;
                     firstCard = null;
                     secondCard = null;
                     if (matchedPairs === cards.length / 2) {
+                        document.getElementById('message').textContent = 'Congratulations! You matched all the cards in ' + moves + ' moves and ' + timeElapsed + ' seconds!';
+                        document.getElementById('play-again').style.display = 'inline-block';
                         stopTimer();
-                        if (phase === 1) {
-                            if (bestTimes[0] === null || timeElapsed < bestTimes[0]) {
-                                bestTimes[0] = timeElapsed;
-                                localStorage.setItem('matchingGameBestTimeP1', bestTimes[0]);
-                            }
+                        if (bestTime === null || timeElapsed < bestTime) {
+                            bestTime = timeElapsed;
+                            localStorage.setItem('matchingGameBestTimeSports', bestTime);
                             updateBestTimeDisplay();
-                            document.getElementById('message').textContent = player1 + "'s turn is over! Now it's " + player2 + "'s turn.";
-                            setTimeout(() => {
-                                phase = 2;
-                                createBoard();
-                            }, 2500);
-                        } else {
-                            if (bestTimes[1] === null || timeElapsed < bestTimes[1]) {
-                                bestTimes[1] = timeElapsed;
-                                localStorage.setItem('matchingGameBestTimeP2', bestTimes[1]);
-                            }
-                            updateBestTimeDisplay();
-                            let winnerMsg = '';
-                            if (bestTimes[0] < bestTimes[1]) {
-                                winnerMsg = player1 + ' wins! (' + bestTimes[0] + 's vs ' + bestTimes[1] + 's)';
-                            } else if (bestTimes[1] < bestTimes[0]) {
-                                winnerMsg = player2 + ' wins! (' + bestTimes[1] + 's vs ' + bestTimes[0] + 's)';
-                            } else {
-                                winnerMsg = "It's a tie! (" + bestTimes[0] + 's vs ' + bestTimes[1] + 's)';
-                            }
-                            document.getElementById('message').textContent = 'Game Over! ' + winnerMsg;
-                            document.getElementById('play-again').style.display = 'inline-block';
                         }
                     }
                 } else {
@@ -288,10 +250,7 @@
                 }
             }
         }
-        document.getElementById('play-again').onclick = function() {
-            phase = 1;
-            createBoard();
-        };
+        document.getElementById('play-again').onclick = createBoard;
         createBoard();
     </script>
 </body>

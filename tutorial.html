@@ -37,14 +37,148 @@
             display: inline-block;
             margin: 10px 0;
         }
+        .tutorial-sim-container {
+            margin: 32px auto 0 auto;
+            background: #fffbe6;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(248,181,0,0.08);
+            padding: 24px 32px;
+            max-width: 400px;
+            text-align: center;
+        }
+        #tutorial-sim-board {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-gap: 10px;
+            justify-content: center;
+            margin: 18px 0 12px 0;
+        }
+        .tutorial-sim-card {
+            width: 60px;
+            height: 60px;
+            font-size: 2em;
+            background: #fff;
+            border: 2px solid #f8b500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .tutorial-sim-card.flipped {
+            background: #ffe082;
+        }
+        .tutorial-sim-card.matched {
+            background: #e0ffe0;
+            color: #43c6ac;
+            cursor: default;
+        }
+        .tutorial-sim-btn {
+            font-size: 1em;
+            padding: 8px 20px;
+            border-radius: 8px;
+            background: #fff;
+            color: #f8b500;
+            border: 2px solid #f8b500;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .tutorial-sim-btn:hover {
+            background: #f8b500;
+            color: #fff;
+        }
+        .tutorial-sim-instructions {
+            margin: 10px 0 0 0;
+            font-size: 1.05em;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <div class="tutorial-container">
         <h1>How to Play the Matching Game</h1>
+        <div class="tutorial-sim-container">
+            <h2>How to Play</h2>
+            <div id="tutorial-sim-board"></div>
+            <p class="tutorial-sim-instructions" id="tutorial-sim-instructions">Click two cards to flip them. If they match, they stay face up!</p>
+            <button id="tutorial-sim-next" class="tutorial-sim-btn">Next Step</button>
+            <button id="tutorial-sim-restart" class="tutorial-sim-btn" style="display:none;">Show Again</button>
+        </div>
         <p>Match pairs of cards by flipping them over. Try to find all the pairs with as few moves as possible!</p>
         <a href="players.html" class="start-link" style="display:block;margin:24px 0 12px 0;">Start</a>
         <a href="index.html" class="home-link" style="display:block;margin:12px 0 0 0;">Back to Home</a>
     </div>
+    <script>
+        // Tutorial simulation logic
+        const simCards = [
+            { value: '🍎', matched: false },
+            { value: '🍌', matched: false },
+            { value: '🍎', matched: false },
+            { value: '🍌', matched: false },
+            { value: '🍇', matched: false },
+            { value: '🍇', matched: false }
+        ];
+        let simStep = 0;
+        const simSteps = [
+            { flip: [0, 2], match: true, text: 'You found a match! 🍎 stays face up.' },
+            { flip: [1, 3], match: true, text: 'Another match! 🍌 stays face up.' },
+            { flip: [4, 5], match: true, text: 'Last match! 🍇 stays face up. You win!' }
+        ];
+        function renderSimBoard() {
+            const board = document.getElementById('tutorial-sim-board');
+            board.innerHTML = '';
+            simCards.forEach((card, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'tutorial-sim-card' + (card.matched ? ' matched' : '');
+                btn.textContent = card.matched ? card.value : '';
+                btn.disabled = true;
+                board.appendChild(btn);
+            });
+        }
+        function restartSim() {
+            simCards.forEach(card => card.matched = false);
+            simStep = 0;
+            renderSimBoard();
+            document.getElementById('tutorial-sim-instructions').textContent = 'Click two cards to flip them. If they match, they stay face up!';
+            document.getElementById('tutorial-sim-next').style.display = '';
+            document.getElementById('tutorial-sim-restart').style.display = 'none';
+        }
+        function nextSimStep() {
+            if (simStep < simSteps.length) {
+                const { flip, match, text } = simSteps[simStep];
+                // Flip cards
+                document.querySelectorAll('.tutorial-sim-card').forEach((btn, i) => {
+                    if (flip.includes(i)) {
+                        btn.textContent = simCards[i].value;
+                        btn.classList.add('flipped');
+                    }
+                });
+                setTimeout(() => {
+                    if (match) {
+                        flip.forEach(idx => {
+                            simCards[idx].matched = true;
+                        });
+                        renderSimBoard();
+                    } else {
+                        document.querySelectorAll('.tutorial-sim-card').forEach((btn, i) => {
+                            if (flip.includes(i)) {
+                                btn.textContent = '';
+                                btn.classList.remove('flipped');
+                            }
+                        });
+                    }
+                    document.getElementById('tutorial-sim-instructions').textContent = text;
+                    simStep++;
+                    if (simStep >= simSteps.length) {
+                        document.getElementById('tutorial-sim-next').style.display = 'none';
+                        document.getElementById('tutorial-sim-restart').style.display = '';
+                    }
+                }, 900);
+            }
+        }
+        document.getElementById('tutorial-sim-next').onclick = nextSimStep;
+        document.getElementById('tutorial-sim-restart').onclick = restartSim;
+        renderSimBoard();
+    </script>
 </body>
 </html>

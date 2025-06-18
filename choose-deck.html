@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How Many Players?</title>
+    <title>Choose a Deck</title>
     <style>
         body {
             background: linear-gradient(120deg, #fceabb 0%, #f8b500 100%);
@@ -15,7 +15,7 @@
             height: 100vh;
             margin: 0;
         }
-        .players-container {
+        .deck-container {
             background: rgba(255, 255, 255, 0.95);
             padding: 40px 60px;
             border-radius: 16px;
@@ -26,17 +26,10 @@
             color: #333;
             margin-bottom: 24px;
         }
-        .player-btns {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .player-btn {
-            width: 180px;
-            margin: 10px 0;
+        .deck-btn {
             font-size: 1.2em;
             padding: 12px 32px;
+            margin: 12px 16px;
             border: none;
             border-radius: 8px;
             background: #f8b500;
@@ -44,7 +37,7 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .player-btn:hover {
+        .deck-btn:hover {
             background: #ffce54;
             color: #333;
         }
@@ -58,14 +51,13 @@
     </style>
 </head>
 <body>
-    <div class="players-container">
-        <h1>How Many Players?</h1>
-        <div class="player-btns">
-            <a href="choose-deck.html"><button class="player-btn">1 Player</button></a>
-            <a href="two-players.html" id="two-player-link"><button class="player-btn">2 Players</button></a>
-            <a href="three-players.html" id="three-player-link"><button class="player-btn">3 Players</button></a>
-        </div>
-        <a href="index.html" class="back-link">Back to Home</a>
+    <div class="deck-container">
+        <h1>Choose a Deck</h1>
+        <a href="fruits-game.html"><button class="deck-btn">Classic Fruits</button></a>
+        <a href="ocean-game.html"><button class="deck-btn">Ocean Animals</button></a>
+        <a href="sports-game.html"><button class="deck-btn">Sports Balls</button></a>
+        <a href="emoji-game.html"><button class="deck-btn">Emoji Faces</button></a>
+        <a href="players.html" class="back-link">Back to Player Select</a>
     </div>
 </body>
 </html>
