@@ -124,6 +124,23 @@
             background: #43c6ac;
             color: #fff;
         }
+        .new-deck-btn {
+            font-size: 1em;
+            padding: 12px 28px;
+            border-radius: 8px;
+            background: #fff;
+            color: #43c6ac;
+            border: 2px solid #43c6ac;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            display: inline-block;
+            margin: 12px 0;
+        }
+        .new-deck-btn:hover {
+            background: #43c6ac;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -135,6 +152,7 @@
             <p id="timer">Time: 0s</p>
             <p id="message"></p>
             <button id="play-again" style="display:none;margin:12px 0;">Play Again</button>
+            <button onclick="window.location.href='choose-deck.html'" class="new-deck-btn">New Deck</button>
             <div class="links-container">
                 <a href="index.html" class="home-link">Back to Home</a>
                 <a href="tutorial.html" class="tutorial-link">Back to Tutorial</a>
@@ -146,9 +164,10 @@
         </div>
     </div>
     <script>
+        const deckName = 'Emoji Faces';
         const cardsArray = [
             '😀', '😀', '😂', '😂', '😍', '😍', '😎', '😎',
-            '😭', '😭', '😡', '😡', '😱', '😱', '🥳', '🥳'
+            '😭', '😭', '😡', '😡', '🥳', '🥳', '😱', '😱'
         ];
         let cards = [];
         let firstCard = null;

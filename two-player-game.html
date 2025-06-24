@@ -116,6 +116,23 @@
             background: #43c6ac;
             color: #fff;
         }
+        .new-deck-btn {
+            font-size: 1em;
+            padding: 12px 28px;
+            border-radius: 8px;
+            background: #f8b500;
+            color: #fff;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            display: inline-block;
+            margin: 12px 0;
+        }
+        .new-deck-btn:hover {
+            background: #43c6ac;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -128,6 +145,7 @@
             <p id="timer">Time: 0s</p>
             <p id="message"></p>
             <button id="play-again" style="display:none;margin:12px 0;">Play Again</button>
+            <button onclick="window.location.href='choose-deck-two.html'" class="new-deck-btn">New Deck</button>
             <div class="links-container">
                 <a href="index.html" class="home-link">Back to Home</a>
                 <a href="tutorial.html" class="tutorial-link">Back to Tutorial</a>
@@ -139,10 +157,49 @@
         </div>
     </div>
     <script>
-        const cardsArray = [
-            '🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '🍓', '🍓',
-            '🍒', '🍒', '🍍', '🍍', '🥝', '🥝', '🍉', '🍉'
-        ];
+        // Deck selection logic for two player mode
+        const urlParams = new URLSearchParams(window.location.search);
+        const deck = urlParams.get('deck') || 'fruits';
+        let cardsArray;
+        let deckName;
+        switch(deck) {
+            case 'ocean':
+                deckName = 'Ocean Animals';
+                cardsArray = [
+                    '🐬', '🐬', '🐠', '🐠', '🦑', '🦑', '🦀', '🦀',
+                    '🐙', '🐙', '🦈', '🦈', '🐳', '🐳', '🐢', '🐢'
+                ];
+                break;
+            case 'sports':
+                deckName = 'Sports Balls';
+                cardsArray = [
+                    '⚽', '⚽', '🏀', '🏀', '🏈', '🏈', '⚾', '⚾',
+                    '🎾', '🎾', '🏐', '🏐', '🏉', '🏉', '🥎', '🥎'
+                ];
+                break;
+            case 'emoji':
+                deckName = 'Emoji Faces';
+                cardsArray = [
+                    '😀', '😀', '😂', '😂', '😍', '😍', '😎', '😎',
+                    '😭', '😭', '😡', '😡', '🥳', '🥳', '😱', '😱'
+                ];
+                break;
+            case 'animals36':
+                deckName = 'Animals (36)';
+                cardsArray = [
+                    '🦁','🦁','🐯','🐯','🐻','🐻','🐼','🐼','🐨','🐨','🐵','🐵','🦊','🦊','🐸','🐸',
+                    '🐮','🐮','🐷','🐷','🐔','🐔','🐧','🐧','🐦','🐦','🐤','🐤','🦆','🦆','🦉','🦉',
+                    '🦄','🦄','🐝','🐝'
+                ];
+                break;
+            default:
+                deckName = 'Fruits';
+                cardsArray = [
+                    '🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '🍓', '🍓',
+                    '🍒', '🍒', '🍍', '🍍', '🥝', '🥝', '🍉', '🍉'
+                ];
+        }
+        document.querySelector('h1').textContent = `Two Player Matching Game - ${deckName}`;
         let cards = [];
         let firstCard = null;
         let secondCard = null;
@@ -158,9 +215,9 @@
             localStorage.getItem('matchingGameBestTimeP2') ? parseInt(localStorage.getItem('matchingGameBestTimeP2')) : null
         ];
         // Two player logic
-        const urlParams = new URLSearchParams(window.location.search);
-        const player1 = urlParams.get('player1') || 'Player 1';
-        const player2 = urlParams.get('player2') || 'Player 2';
+        const urlParams2 = new URLSearchParams(window.location.search);
+        const player1 = urlParams2.get('player1') || 'Player 1';
+        const player2 = urlParams2.get('player2') || 'Player 2';
         let currentPlayer = 1;
         let scores = [0, 0];
         let phase = 1; // 1 = player 1's game, 2 = player 2's game
@@ -213,6 +270,12 @@
             }
             bestTime = null;
             updateBestTimeDisplay();
+            // Set grid columns for Animals (36) deck
+            if (deck === 'animals36') {
+                document.getElementById('game-board').style.gridTemplateColumns = 'repeat(6, 90px)';
+            } else {
+                document.getElementById('game-board').style.gridTemplateColumns = 'repeat(4, 90px)';
+            }
             for (let i = 0; i < cards.length; i++) {
                 const card = document.createElement('button');
                 card.className = 'card';

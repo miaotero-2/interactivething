@@ -150,17 +150,20 @@
             <p id="message"></p>
             <button id="play-again" style="display:none;margin:12px 0;">Play Again</button>
             <button onclick="window.location.href='choose-deck.html'" class="new-deck-btn">New Deck</button>
+        </div>
+        <div class="side-panel" style="display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; min-width: 180px; margin-left: 32px;">
+            <a href="index.html" class="home-link" style="margin-bottom: 16px;">Back to Home</a>
             <div class="links-container">
-                <a href="index.html" class="home-link">Back to Home</a>
                 <a href="tutorial.html" class="tutorial-link">Back to Tutorial</a>
                 <a href="players.html" class="players-link">How Many Players?</a>
             </div>
-        </div>
-        <div class="best-time-box">
-            <p id="best-time">Best Time: --</p>
+            <div class="best-time-box">
+                <p id="best-time">Best Time: --</p>
+            </div>
         </div>
     </div>
     <script>
+        const deckName = 'Fruits';
         const cardsArray = [
             '🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '🍓', '🍓',
             '🍒', '🍒', '🍍', '🍍', '🥝', '🥝', '🍉', '🍉'
@@ -267,6 +270,7 @@
         }
         document.getElementById('play-again').onclick = createBoard;
         createBoard();
+        document.querySelector('h1').textContent = `Single Player Matching Game - ${deckName}`;
     </script>
 </body>
 </html>

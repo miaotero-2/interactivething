@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Single Player Matching Game - Sports Balls</title>
+    <title>Single Player Matching Game - Animals (36)</title>
     <style>
         body {
             background: linear-gradient(120deg, #f8ffae 0%, #43c6ac 100%);
@@ -25,7 +25,7 @@
         }
         .start-container {
             position: relative;
-            flex: 0 1 500px;
+            flex: 0 1 600px;
             margin: 40px 0 40px 0;
         }
         .best-time-box {
@@ -36,11 +36,9 @@
             box-shadow: 0 2px 12px rgba(67,198,172,0.10);
             padding: 32px 18px;
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
+            align-items: center;
+            justify-content: center;
             height: fit-content;
-            min-width: 180px;
         }
         #best-time {
             margin: 0 0 8px 0;
@@ -85,15 +83,15 @@
         }
         #game-board {
             display: grid;
-            grid-template-columns: repeat(4, 90px);
-            grid-gap: 16px;
+            grid-template-columns: repeat(6, 70px);
+            grid-gap: 12px;
             justify-content: center;
             margin: 24px 0 12px 0;
         }
         .card {
-            width: 90px;
-            height: 90px;
-            font-size: 2.8em;
+            width: 70px;
+            height: 70px;
+            font-size: 2em;
             background: #fff;
             border: 2px solid #43c6ac;
             border-radius: 12px;
@@ -126,19 +124,18 @@
         }
         .new-deck-btn {
             font-size: 1em;
-            padding: 12px 28px;
+            padding: 10px 24px;
             border-radius: 8px;
             background: #fff;
-            color: #43c6ac;
-            border: 2px solid #43c6ac;
+            color: #f8b500;
+            border: 2px solid #f8b500;
             font-weight: bold;
             cursor: pointer;
+            margin: 10px 0 0 0;
             transition: background 0.2s, color 0.2s;
-            display: inline-block;
-            margin: 12px 0;
         }
         .new-deck-btn:hover {
-            background: #43c6ac;
+            background: #f8b500;
             color: #fff;
         }
     </style>
@@ -146,7 +143,7 @@
 <body>
     <div class="main-layout">
         <div class="start-container">
-            <h1>Single Player Matching Game - Sports Balls</h1>
+            <h1>Single Player Matching Game - Animals (36)</h1>
             <div id="game-board"></div>
             <p id="moves">Moves: 0</p>
             <p id="timer">Time: 0s</p>
@@ -164,11 +161,12 @@
         </div>
     </div>
     <script>
-        const deckName = 'Sports Balls';
+        const deckName = 'Animals (36)';
         const cardsArray = [
-            '⚽', '⚽', '🏀', '🏀', '🏈', '🏈', '⚾', '⚾',
-            '🎾', '🎾', '🏐', '🏐', '🏉', '🏉', '🥎', '🥎'
-        ];
+            '🦁','🦁','🐯','🐯','🐻','🐻','🐼','🐼','🐨','🐨','🐵','🐵','🦊','🦊','🐸','🐸',
+            '🐮','🐮','🐷','🐷','🐔','🐔','🐧','🐧','🐦','🐦','🐤','🐤','🦆','🦆','🦉','🦉',
+            '🦄','🦄','🐝','🐝'
+        ]; // 18 pairs, 36 cards
         let cards = [];
         let firstCard = null;
         let secondCard = null;
@@ -178,7 +176,7 @@
         let timerInterval = null;
         let timeElapsed = 0;
         let timerStarted = false;
-        let bestTime = localStorage.getItem('matchingGameBestTimeSports') ? parseInt(localStorage.getItem('matchingGameBestTimeSports')) : null;
+        let bestTime = localStorage.getItem('matchingGameBestTime36') ? parseInt(localStorage.getItem('matchingGameBestTime36')) : null;
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -245,14 +243,15 @@
                     matchedPairs++;
                     firstCard.disabled = true;
                     secondCard.disabled = true;
-                    resetBoard();
-                    if (matchedPairs === cardsArray.length / 2) {
-                        stopTimer();
-                        document.getElementById('message').textContent = 'You won!';
+                    firstCard = null;
+                    secondCard = null;
+                    if (matchedPairs === cards.length / 2) {
+                        document.getElementById('message').textContent = 'Congratulations! You matched all the cards in ' + moves + ' moves and ' + timeElapsed + ' seconds!';
                         document.getElementById('play-again').style.display = 'inline-block';
+                        stopTimer();
                         if (bestTime === null || timeElapsed < bestTime) {
                             bestTime = timeElapsed;
-                            localStorage.setItem('matchingGameBestTimeSports', bestTime);
+                            localStorage.setItem('matchingGameBestTime36', bestTime);
                             updateBestTimeDisplay();
                         }
                     }
@@ -261,17 +260,15 @@
                     setTimeout(() => {
                         firstCard.textContent = '';
                         secondCard.textContent = '';
-                        resetBoard();
+                        firstCard = null;
+                        secondCard = null;
+                        lockBoard = false;
                     }, 1000);
                 }
             }
         }
-        function resetBoard() {
-            [firstCard, secondCard, lockBoard] = [null, null, false];
-        }
         document.getElementById('play-again').onclick = createBoard;
         createBoard();
-        document.querySelector('h1').textContent = `Single Player Matching Game - ${deckName}`;
     </script>
 </body>
 </html>
