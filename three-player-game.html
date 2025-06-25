@@ -66,6 +66,10 @@
             justify-content: center;
             margin: 24px 0 12px 0;
         }
+        /* Dynamically set 6x6 for animals36 deck */
+        body.animals36-deck #game-board {
+            grid-template-columns: repeat(6, 90px);
+        }
         .card {
             width: 90px;
             height: 90px;
@@ -171,18 +175,21 @@
                 '🐬', '🐬', '🐠', '🐠', '🦑', '🦑', '🦀', '🦀',
                 '🐙', '🐙', '🦈', '🦈', '🐳', '🐳', '🐢', '🐢'
             ];
+            document.body.classList.remove('animals36-deck');
         } else if (deck === 'sports') {
             deckName = 'Sports Balls';
             cardsArray = [
                 '⚽', '⚽', '🏀', '🏀', '🏈', '🏈', '⚾', '⚾',
                 '🎾', '🎾', '🏐', '🏐', '🏉', '🏉', '🥎', '🥎'
             ];
+            document.body.classList.remove('animals36-deck');
         } else if (deck === 'emoji') {
             deckName = 'Emoji Faces';
             cardsArray = [
                 '😀', '😀', '😂', '😂', '😍', '😍', '😎', '😎',
                 '😭', '😭', '😡', '😡', '🥳', '🥳', '😱', '😱'
             ];
+            document.body.classList.remove('animals36-deck');
         } else if (deck === 'animals36') {
             deckName = 'Animals (36)';
             cardsArray = [
@@ -190,12 +197,14 @@
                 '🐮','🐮','🐷','🐷','🐔','🐔','🐧','🐧','🐦','🐦','🐤','🐤','🦆','🦆','🦉','🦉',
                 '🦄','🦄','🐝','🐝'
             ];
+            document.body.classList.add('animals36-deck');
         } else {
             deckName = 'Fruits';
             cardsArray = [
                 '🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '🍓', '🍓',
                 '🍒', '🍒', '🍍', '🍍', '🥝', '🥝', '🍉', '🍉'
             ];
+            document.body.classList.remove('animals36-deck');
         }
         document.querySelector('h1').textContent = `Three Player Matching Game - ${deckName}`;
         let cards = [];
